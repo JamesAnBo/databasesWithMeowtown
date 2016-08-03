@@ -3,6 +3,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var config = require('./knexfile').development
 var knex = require('knex')(config)
+var index = require('./index')
 
 var app = express();
 
@@ -37,6 +38,17 @@ app.get('/cats', function(req, res) {
       console.error(err.message);
       res.status(500).send("Couldn't show you the cats!")
     })
+})
+
+app.get('/test', function(req, res){
+  index.OwnCats()
+  .then(function(cats){
+      res.send(cats)
+  })
+  .catch(function(err){
+    console.error(err.message);
+    res.status(500).send("Couldn't show you the test!")
+  })
 })
 
 app.get('/cats/new', function(req, res) {
