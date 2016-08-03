@@ -1,6 +1,8 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
+var config = require('./knexfile').development
+var knex = require('knex')(config)
 
 var app = express();
 
@@ -26,7 +28,15 @@ app.get('/', function(req, res) {
 })
 
 app.get('/cats', function(req, res) {
- res.render('catsIndex', catsObj)
+  return knex('Cats')
+    .select()
+    .then(function(data){
+      res.send(data)
+    })
+    .catch(function(err){
+      console.error(err.message);
+      res.status(500).send("Couldn't show you the cats!")
+    })
 })
 
 app.get('/cats/new', function(req, res) {
